@@ -4,28 +4,140 @@
   "title": "grill-jev DecisionEvidence",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "decision_id", "state_hash", "model", "overall_choice", "dimensions", "constraints", "candidate_coverage", "warnings"],
+  "required": [
+    "schema_version",
+    "status",
+    "decision_id",
+    "state_hash",
+    "backend",
+    "policy",
+    "overall_choice",
+    "dimensions",
+    "constraint_checks",
+    "missing_alternative",
+    "warnings",
+    "fallback"
+  ],
   "properties": {
     "schema_version": {"const": "0.1"},
+    "status": {"enum": ["ok", "low_confidence", "degraded"]},
     "decision_id": {"type": "string"},
     "state_hash": {"type": "string"},
-    "model": {"type": ["string", "null"]},
-    "overall_choice": {
+    "backend": {
       "type": "object",
-      "required": ["choice", "confidence", "probabilities"],
+      "additionalProperties": false,
+      "required": ["name", "model"],
       "properties": {
-        "choice": {"type": "string"},
-        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
-        "probabilities": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}}
+        "name": {"type": "string"},
+        "model": {"type": ["string", "null"]}
       }
     },
-    "dimensions": {"type": "object"},
-    "constraints": {"type": "object"},
-    "candidate_coverage": {
+    "policy": {
       "type": "object",
-      "required": ["missing_material_option_probability"],
-      "properties": {"missing_material_option_probability": {"type": "number", "minimum": 0, "maximum": 1}}
+      "additionalProperties": false,
+      "required": [
+        "constraint_warning_threshold",
+        "missing_alternative_threshold",
+        "low_confidence_threshold"
+      ],
+      "properties": {
+        "constraint_warning_threshold": {"type": "number", "minimum": 0, "maximum": 1},
+        "missing_alternative_threshold": {"type": "number", "minimum": 0, "maximum": 1},
+        "low_confidence_threshold": {"type": "number", "minimum": 0, "maximum": 1}
+      }
     },
-    "warnings": {"type": "array", "items": {"type": "string"}}
+    "overall_choice": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["choice", "confidence", "probabilities"],
+          "properties": {
+            "choice": {"type": "string"},
+            "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+            "probabilities": {
+              "type": "object",
+              "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}
+            }
+          }
+        }
+      ]
+    },
+    "dimensions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["label", "basis", "options"],
+        "properties": {
+          "label": {"type": "string"},
+          "basis": {"type": "array", "items": {"type": "string"}},
+          "options": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "required": ["score", "confidence", "probabilities", "legend"],
+              "properties": {
+                "score": {"type": "number"},
+                "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+                "probabilities": {"type": "object"},
+                "legend": {"type": "object"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "constraint_checks": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["text", "threshold", "options"],
+        "properties": {
+          "text": {"type": "string"},
+          "threshold": {"type": "number", "minimum": 0, "maximum": 1},
+          "options": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "required": ["violation_probability", "status"],
+              "properties": {
+                "violation_probability": {"type": "number", "minimum": 0, "maximum": 1},
+                "status": {"enum": ["pass", "violation"]}
+              }
+            }
+          }
+        }
+      }
+    },
+    "missing_alternative": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["probability", "status"],
+          "properties": {
+            "probability": {"type": "number", "minimum": 0, "maximum": 1},
+            "status": {"enum": ["complete_enough", "expand_candidates"]}
+          }
+        }
+      ]
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "fallback": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action", "reason"],
+          "properties": {
+            "action": {"const": "agent_reasoning"},
+            "reason": {"type": "string"}
+          }
+        }
+      ]
+    }
   }
 }
