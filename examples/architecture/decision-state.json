@@ -1,0 +1,55 @@
+{
+  "schema_version": "0.1",
+  "decision": {
+    "id": "save-storage",
+    "question": "Which storage format should the first production save system use?"
+  },
+  "objective": {
+    "primary": "Ship a maintainable single-player save system that remains easy to debug and migrate."
+  },
+  "goals": [
+    {
+      "id": "debuggable",
+      "text": "Save data should be easy for developers to inspect while the game is evolving.",
+      "source": "user"
+    },
+    {
+      "id": "migration",
+      "text": "The format should support future save-version migrations.",
+      "source": "user"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "single-player",
+      "text": "The game is offline single-player in v1.",
+      "severity": "hard",
+      "source": "CONTEXT.md"
+    },
+    {
+      "id": "small-team",
+      "text": "Implementation and maintenance burden must stay low.",
+      "severity": "soft",
+      "source": "user"
+    }
+  ],
+  "settled_decisions": [],
+  "facts": [],
+  "options": [
+    {
+      "id": "json",
+      "text": "Human-readable JSON files"
+    },
+    {
+      "id": "sqlite",
+      "text": "SQLite database"
+    },
+    {
+      "id": "binary",
+      "text": "Custom binary format"
+    }
+  ],
+  "unknowns": [
+    "Final save size is not yet known."
+  ]
+}
