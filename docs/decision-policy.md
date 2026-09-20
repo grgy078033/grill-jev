@@ -47,7 +47,7 @@ Default policy:
 - probability **< 0.65** → `complete_enough`
 - probability **>= 0.65** → `expand_candidates`
 
-When `expand_candidates` is returned, Jev does **not** invent the missing option. The generative parent agent should brainstorm one or more additional candidates, then run `grill-jev` again.
+When `expand_candidates` is returned, Jev does **not** invent the missing option. The generative parent agent should propose additional candidates for discussion and label them as not evaluated. Run `grill-jev` again only within the user's API-call authorization; the signal itself or a menu selection does not grant permission for another call.
 
 Override:
 

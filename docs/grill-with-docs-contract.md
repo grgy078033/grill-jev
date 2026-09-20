@@ -36,9 +36,12 @@ grill-with-docs
   → constructs DecisionState + EvaluationPlan
   → calls grill-jev
   → explains Jev evidence separately from its own recommendation
-  → asks the user to settle the decision
+  → presents compact scored choices using an available question tool or plain-text fallback
+  → asks the user to settle, revise, or defer the decision
   → records the settled decision using the normal grill-with-docs workflow
 ```
+
+Follow the [presentation contract](../skills/grill-jev/references/presentation.md): keep essential scores and warnings visible in short option labels/descriptions, not hidden in long previews. Tool schemas differ across hosts. New candidates are not evaluated until a later authorized call; selecting a menu option is not permission to rerun Jev automatically.
 
 ## Handoff back
 

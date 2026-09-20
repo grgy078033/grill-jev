@@ -93,6 +93,34 @@ python skills/grill-jev/scripts/grill_jev.py \
 
 如果 Jev 無法使用，預設會回傳 `status: "degraded"` 與 `agent_reasoning` 降級指示，而不是中斷整個規劃流程。
 
+## Agent 互動規範：Pi、Codex、Claude Code
+
+Agent 應讀取 [SKILL.md](skills/grill-jev/SKILL.md)，並遵守[呈現規範](skills/grill-jev/references/presentation.md)。若所在工具沒有自動發現巢狀 skill，請提供該檔案的完整路徑，要求 agent 讀取；保留 Repository 結構，讓相對引用有效。
+
+1. 依序呈現 **Jev 證據 → Agent 建議 → 使用者決定**。
+2. 當所在工具提供且允許使用互動選項工具時，優先使用；先確認實際參數格式，不可假設 Codex、Claude Code 接受 Pi 的 `ask_user_question` 參數。
+3. 選項標題放方案 ID／名稱與 Choice 機率；短說明放相同的一至兩項分數及限制警告。**預設不使用長預覽**，重要比較不得只藏在 hidden lines 或展開面板中。
+4. 統一說明量尺、方向及遺漏方案訊號；信心、其餘維度及全部警告放在提問前的比較中。若介面放不下全部方案或必要資訊，改用聊天中的精簡表格，請使用者回覆方案 ID，不可默默刪除候選方案。
+5. 允許提出替代方案或暫緩；新方案標示為**尚未評估**。點選選項不代表授權實作或自動再次呼叫 Jev。
+
+精簡介面示意（不是特定工具的呼叫格式）：
+
+```text
+搜尋／省力：0–4，越高越好。可能遺漏方案：74%。
+A：Markdown｜Jev 77% — 搜尋 1.56/4｜省力 2.96/4｜離線違規 7%
+B：SQLite  ｜Jev 23% — 搜尋 3.19/4｜省力 0.72/4｜離線違規 4%
+C：雲端    ｜Jev  0% — 搜尋 3.41/4｜省力 3.78/4｜警告：離線違規 98%
+先討論替代方案 — 尚未評估，暫不再次呼叫 API。
+```
+
+數字僅為示意；agent 必須填入當次證據，不可複製範例數值。這是跨工具的內容規範，不保證每種終端都有相同元件或完全不截斷。詳見[整合說明](skills/grill-jev/references/integrations.md)。
+
+### TypeSafe 官方評分規則
+
+[Score](https://docs.typesafe.ai/primitives/score) 對單一維度使用 **2–10 個有順序且能具體區分的等級**。N 級的分數範圍為 **0 到 N−1**；只有五級時才是 0–4。分數是等級編號的機率加權平均，因此可以是小數。例如三級機率 `[0.0, 0.57, 0.43]` 的分數是 `1.43`，量尺為 0–2。
+
+只使用能有意義區分的等級數，不為看似精確而增加級數。高分不一定較好，例如嚴重程度與易維護程度的方向不同。介面必須顯示各維度原始範圍及方向，不能一律寫成滿分 4 分或默默轉成百分比。[Confidence](https://docs.typesafe.ai/confidence) 描述機率分布的集中程度，不是正確率；Choice 機率不是實際成功率；Noul 則是是／否條件的機率，不是等級分數。詳見[評分規準設計](skills/grill-jev/references/evaluation-plan.md)。
+
 ## 輸出範例
 
 以下為模擬結果節選：
@@ -108,9 +136,9 @@ python skills/grill-jev/scripts/grill_jev.py \
   "dimensions": {
     "user-friction": {
       "options": {
-        "A": {"score": 3.7, "confidence": 0.76},
-        "B": {"score": 3.0, "confidence": 0.70},
-        "C": {"score": 4.5, "confidence": 0.84}
+        "A": {"score": 3.07, "confidence": 0.76},
+        "B": {"score": 2.59, "confidence": 0.70},
+        "C": {"score": 3.57, "confidence": 0.84}
       }
     }
   },

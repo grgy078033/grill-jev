@@ -33,8 +33,8 @@ The upstream planner owns the interview. `grill-jev` receives one current decisi
 4. Build an `EvaluationPlan` whose dimensions are traceable to goals, constraints, or settled principles.
 5. Validate both JSON documents against the protocol.
 6. Run `scripts/grill_jev.py`.
-7. Present Jev evidence separately from the parent agent's recommendation.
-8. Ask the user to make the final decision.
+7. Present a compact comparison of Jev evidence separately from the parent agent's recommendation.
+8. Ask the user to decide using concise, scored options in an available native question tool; use a plain-text comparison and ID selection when that tool is unavailable or too restrictive.
 9. Return control to the upstream planning workflow.
 
 See `../../docs/schema.md` for the input/output field contract.
@@ -71,12 +71,12 @@ The script rejects common recommendation-leak fields recursively.
 Use Jev primitives by meaning:
 
 - **Choice**: overall fit among the offered candidates.
-- **Score**: degree along a concrete ordered rubric for one option and one evaluation dimension.
+- **Score**: degree along a concrete ordered rubric for one option and one evaluation dimension. Follow [TypeSafe's official Score contract](https://docs.typesafe.ai/primitives/score): 2–10 distinct levels indexed from 0, so N levels yield a 0–(N−1) score. The score is the probability-weighted mean of those indices; high does not inherently mean good. Five levels / 0–4 is an example, not a required scale.
 - **Noul**: crisp yes/no conditions such as hard-constraint violation or candidate-set incompleteness.
 
 Hard-constraint checks are policy signals, not automatic filters. A likely violation must remain visible to the user.
 
-If the missing-alternative signal crosses the configured threshold, ask the generative parent agent to expand the candidate set and evaluate again. Jev does not invent the missing option.
+If the missing-alternative signal crosses the configured threshold, ask the generative parent agent to propose additional candidates for discussion. Jev does not invent the missing option. Label new candidates as not evaluated, and only evaluate again within the user's API-call authorization; a coverage warning or menu selection does not itself authorize another call.
 
 Do not invent a weighted aggregate score unless the user supplied the weights.
 
@@ -110,7 +110,16 @@ Keep these three layers visibly separate:
 2. **Agent Recommendation** — the parent agent's own reasoning after seeing the evidence.
 3. **User Decision** — the final choice, including the ability to choose another option.
 
-Read `references/presentation.md` for the display contract.
+Read `references/presentation.md` before presenting results or asking for a choice. It is the normative cross-agent display contract:
+
+- Show the comparison, confidence/uncertainty, and missing-alternative signal in the conversation first.
+- In a structured question, put each option's stable ID, short name, and Jev Choice percentage in its label when space permits. Put the same one or two relevant scores and a concise constraint warning in each description.
+- Keep these summaries directly visible. Omit `preview` by default; do not hide essential scores or warnings in long previews or expandable panels.
+- Explain the rubric's actual scale and direction. A five-level rubric is 0–4; higher is better only when the rubric says so. Choice probability is not success probability.
+- Preserve all candidates and expose all constraint warnings in the preceding comparison. If the tool cannot fit the choices or required information, use a compact plain-text table and ask for an option ID instead.
+- Use only tools actually exposed and permitted by the host. Adapt to their schemas; do not assume Codex or Claude Code accepts Pi's `ask_user_question` arguments.
+- When Jev is unavailable, show no invented scores. Keep unevaluated proposals separate from scored candidates.
+- Let the user propose an alternative, revise, or defer. Selecting a menu option does not authorize implementation or automatic reevaluation.
 
 ## Command
 

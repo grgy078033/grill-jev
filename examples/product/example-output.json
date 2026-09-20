@@ -27,7 +27,7 @@
       "basis": ["goal:low-friction"],
       "options": {
         "A": {
-          "score": 3.7,
+          "score": 3.07,
           "confidence": 0.76,
           "probabilities": {"0": 0.03, "1": 0.06, "2": 0.12, "3": 0.39, "4": 0.40},
           "legend": {
@@ -39,7 +39,7 @@
           }
         },
         "B": {
-          "score": 3.0,
+          "score": 2.59,
           "confidence": 0.70,
           "probabilities": {"0": 0.06, "1": 0.10, "2": 0.24, "3": 0.39, "4": 0.21},
           "legend": {
@@ -51,7 +51,7 @@
           }
         },
         "C": {
-          "score": 4.5,
+          "score": 3.57,
           "confidence": 0.84,
           "probabilities": {"0": 0.01, "1": 0.02, "2": 0.06, "3": 0.21, "4": 0.70},
           "legend": {
@@ -69,7 +69,7 @@
       "basis": ["goal:teach-core"],
       "options": {
         "A": {
-          "score": 4.5,
+          "score": 3.58,
           "confidence": 0.85,
           "probabilities": {"0": 0.01, "1": 0.02, "2": 0.05, "3": 0.22, "4": 0.70},
           "legend": {
@@ -81,7 +81,7 @@
           }
         },
         "B": {
-          "score": 4.0,
+          "score": 3.18,
           "confidence": 0.77,
           "probabilities": {"0": 0.02, "1": 0.04, "2": 0.10, "3": 0.42, "4": 0.42},
           "legend": {
@@ -93,7 +93,7 @@
           }
         },
         "C": {
-          "score": 2.8,
+          "score": 2.38,
           "confidence": 0.72,
           "probabilities": {"0": 0.05, "1": 0.12, "2": 0.35, "3": 0.36, "4": 0.12},
           "legend": {
@@ -111,7 +111,7 @@
       "basis": ["constraint:small-team"],
       "options": {
         "A": {
-          "score": 3.1,
+          "score": 2.63,
           "confidence": 0.73,
           "probabilities": {"0": 0.05, "1": 0.10, "2": 0.24, "3": 0.39, "4": 0.22},
           "legend": {
@@ -123,7 +123,7 @@
           }
         },
         "B": {
-          "score": 2.7,
+          "score": 2.24,
           "confidence": 0.69,
           "probabilities": {"0": 0.08, "1": 0.17, "2": 0.31, "3": 0.31, "4": 0.13},
           "legend": {
@@ -135,7 +135,7 @@
           }
         },
         "C": {
-          "score": 4.4,
+          "score": 3.46,
           "confidence": 0.82,
           "probabilities": {"0": 0.01, "1": 0.03, "2": 0.07, "3": 0.27, "4": 0.62},
           "legend": {

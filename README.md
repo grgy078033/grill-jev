@@ -93,6 +93,34 @@ python skills/grill-jev/scripts/grill_jev.py \
 
 If Jev is unavailable, the default behavior returns `status: "degraded"` with an `agent_reasoning` fallback instead of breaking the planning flow.
 
+## Agent interaction: Pi, Codex, Claude Code
+
+Agents must read [SKILL.md](skills/grill-jev/SKILL.md) and follow the [presentation contract](skills/grill-jev/references/presentation.md). If your host does not discover the nested skill automatically, ask it to read that file by its full path; preserve the repository layout for relative references.
+
+1. Show **Jev Evidence**, then **Agent Recommendation**, then request the **User Decision**.
+2. Prefer the host's native structured question tool when it is exposed and allowed. Inspect its current schema; Pi's `ask_user_question` arguments are not a universal API.
+3. Put the option ID/name and Choice probability in each label, with the same one or two scores and constraint warnings in each short description. **Omit long previews by default**; essential comparisons must not depend on hidden lines or expanding a panel.
+4. State the scales/directions and missing-option warning once. Keep confidence, remaining dimensions, and all warnings in the preceding comparison. If choices or required information cannot fit, show a plain-text table and ask for an option ID; never silently remove a candidate.
+5. Allow alternatives or deferral. Mark new proposals as **not evaluated**. Selecting an option is not permission to implement or automatically call Jev again.
+
+Illustrative visible menu (not a host-specific tool payload):
+
+```text
+Search / Less upkeep: 0–4, higher is better. Possible missing option: 74%.
+A: Markdown | Jev 77% — Search 1.56/4 | Less upkeep 2.96/4 | Offline violation 7%
+B: SQLite   | Jev 23% — Search 3.19/4 | Less upkeep 0.72/4 | Offline violation 4%
+C: Cloud    | Jev  0% — Search 3.41/4 | Less upkeep 3.78/4 | WARNING: offline violation 98%
+Discuss alternatives — Not evaluated; no new API call yet.
+```
+
+These are illustrative values; agents must use current evidence, not copy these numbers. This is a portable content contract, not a guarantee of identical widgets or no truncation in every terminal. See [host integration guidance](skills/grill-jev/references/integrations.md).
+
+### Official TypeSafe scoring
+
+[Score](https://docs.typesafe.ai/primitives/score) uses **2–10 ordered, distinctly described levels** for one dimension. N levels produce a score from **0 to N−1**; five levels happen to mean 0–4. The score is the probability-weighted mean of the level indices, so it can be fractional. For example, `[0.0, 0.57, 0.43]` produces `1.43` on a three-level 0–2 scale.
+
+Use only as many levels as can be described meaningfully. High scores are not inherently better: severity and maintainability have different directions. Show each dimension's native scale and direction; do not assume every score is out of 4 or silently convert it to a percentage. [Confidence](https://docs.typesafe.ai/confidence) describes the probability distribution's concentration, not correctness. Choice probability is not success probability, and Noul returns a yes/no probability rather than a rubric score. See [rubric design rules](skills/grill-jev/references/evaluation-plan.md).
+
 ## Example output
 
 Simulated excerpt:
@@ -108,9 +136,9 @@ Simulated excerpt:
   "dimensions": {
     "user-friction": {
       "options": {
-        "A": {"score": 3.7, "confidence": 0.76},
-        "B": {"score": 3.0, "confidence": 0.70},
-        "C": {"score": 4.5, "confidence": 0.84}
+        "A": {"score": 3.07, "confidence": 0.76},
+        "B": {"score": 2.59, "confidence": 0.70},
+        "C": {"score": 3.57, "confidence": 0.84}
       }
     }
   },

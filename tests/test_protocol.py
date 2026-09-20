@@ -91,6 +91,40 @@ class GrillJevProtocolTests(unittest.TestCase):
         mod.validate_decision_state(state)
         mod.validate_evaluation_plan(plan, state)
 
+    def test_rubric_level_counts_follow_typesafe_range(self):
+        for count in (1, 2, 3, 5, 10, 11):
+            with self.subTest(levels=count):
+                plan = json.loads(json.dumps(self.plan))
+                rubric = [f"Distinct test level {i}" for i in range(count)]
+                plan["dimensions"][0]["rubric"] = rubric
+                if 2 <= count <= 10:
+                    mod.validate_evaluation_plan(plan, self.state)
+                    payload = mod.build_dry_run_payload(self.state, plan)
+                    qid = f"score__{plan['dimensions'][0]['id']}__{self.state['options'][0]['id']}"
+                    self.assertEqual(payload["questions"][qid]["criteria"], rubric)
+                else:
+                    with self.assertRaises(mod.ProtocolError):
+                        mod.validate_evaluation_plan(plan, self.state)
+
+    def test_documented_scores_match_level_probability_means(self):
+        _, plan = load_example("product")
+        evidence = json.loads(
+            (ROOT / "examples/product/example-output.json").read_text(encoding="utf-8")
+        )
+        for dimension in plan["dimensions"]:
+            levels = {str(i) for i in range(len(dimension["rubric"]))}
+            for option, answer in evidence["dimensions"][dimension["id"]]["options"].items():
+                with self.subTest(dimension=dimension["id"], option=option):
+                    probabilities = answer["probabilities"]
+                    self.assertEqual(set(probabilities), levels)
+                    self.assertEqual(set(answer["legend"]), levels)
+                    self.assertTrue(all(0 <= p <= 1 for p in probabilities.values()))
+                    self.assertAlmostEqual(sum(probabilities.values()), 1.0)
+                    self.assertGreaterEqual(answer["score"], 0)
+                    self.assertLessEqual(answer["score"], len(levels) - 1)
+                    expected = sum(int(level) * p for level, p in probabilities.items())
+                    self.assertAlmostEqual(answer["score"], expected)
+
     def test_recommendation_firewall_rejects_nested_leak(self):
         bad = json.loads(json.dumps(self.state))
         bad["facts"].append({

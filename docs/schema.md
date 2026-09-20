@@ -49,6 +49,10 @@ Valid `basis` references are:
 - `settled:<id>`
 - `fact:<id>`
 
+### Native Score semantics
+
+Each dimension's `rubric` maps directly to TypeSafe `Score.criteria`. Following the [official Score contract](https://docs.typesafe.ai/primitives/score), its 2–10 ordered levels are numbered from 0 to N−1. The returned `score` is the probability-weighted mean of those indices, not a fixed 0–4 or percentage score. Use concrete descriptions for a single dimension, and document its direction in the label/instruction/rubric. This protocol has no separate scale or direction fields; agents must read the rubric, not invent new JSON properties. See [evaluation-plan guidance](../skills/grill-jev/references/evaluation-plan.md).
+
 ## DecisionEvidence
 
 The output contains:
