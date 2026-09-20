@@ -1,0 +1,45 @@
+{
+  "schema_version": "0.1",
+  "decision_id": "restaurant-delivery-model",
+  "dimensions": [
+    {
+      "id": "low-friction",
+      "label": "Low player friction",
+      "instruction": "How well does the option support a low-micromanagement, low-busywork player experience?",
+      "basis": ["goal:low-micromanagement"],
+      "rubric": [
+        "Strongly increases repetitive player busywork",
+        "Mostly increases busywork",
+        "Mixed or neutral",
+        "Mostly reduces busywork",
+        "Strongly supports low-friction play"
+      ]
+    },
+    {
+      "id": "npc-synergy",
+      "label": "NPC-system synergy",
+      "instruction": "How well does the option make meaningful use of the existing staff and NPC systems?",
+      "basis": ["goal:npc-integration", "settled:staff-hiring", "settled:npc-schedules"],
+      "rubric": [
+        "Barely uses the existing NPC/staff systems",
+        "Uses them weakly",
+        "Mixed or incidental use",
+        "Makes good use of them",
+        "Makes them central and meaningfully valuable"
+      ]
+    },
+    {
+      "id": "scope-fit",
+      "label": "Scope fit",
+      "instruction": "How well does the option fit the implementation capacity of a small development team?",
+      "basis": ["constraint:small-team"],
+      "rubric": [
+        "Very poor fit; unusually expensive or complex",
+        "Poor fit",
+        "Manageable with trade-offs",
+        "Good fit",
+        "Very small and straightforward implementation"
+      ]
+    }
+  ]
+}
