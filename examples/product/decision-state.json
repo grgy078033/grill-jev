@@ -1,0 +1,61 @@
+{
+  "schema_version": "0.1",
+  "decision": {
+    "id": "onboarding-format",
+    "question": "Which onboarding format should the desktop developer tool use?"
+  },
+  "objective": {
+    "primary": "Teach the core workflow quickly without adding friction for returning users."
+  },
+  "goals": [
+    {
+      "id": "low-friction",
+      "text": "Onboarding should be easy to skip and should not slow experienced users.",
+      "source": "user"
+    },
+    {
+      "id": "teach-core",
+      "text": "New users should understand the primary workflow before creating their first project.",
+      "source": "user"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "offline",
+      "text": "The onboarding experience must work without a network connection.",
+      "severity": "hard",
+      "source": "user"
+    },
+    {
+      "id": "small-team",
+      "text": "The first version should remain cheap to maintain.",
+      "severity": "soft",
+      "source": "user"
+    }
+  ],
+  "settled_decisions": [
+    {
+      "id": "desktop-first",
+      "text": "The first release is a desktop application.",
+      "source": "CONTEXT.md"
+    }
+  ],
+  "facts": [],
+  "options": [
+    {
+      "id": "A",
+      "text": "A short interactive tutorial embedded in the desktop app."
+    },
+    {
+      "id": "B",
+      "text": "A hosted web walkthrough opened from the app."
+    },
+    {
+      "id": "C",
+      "text": "A lightweight in-app tooltip tour."
+    }
+  ],
+  "unknowns": [
+    "The final number of onboarding steps is not yet known."
+  ]
+}
