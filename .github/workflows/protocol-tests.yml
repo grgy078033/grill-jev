@@ -1,0 +1,22 @@
+name: protocol-tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run offline protocol tests
+        run: python evals/run_local.py
+      - name: Dry-run game-design example
+        run: |
+          python skills/grill-jev/scripts/grill_jev.py \
+            --state examples/game-design/decision-state.json \
+            --plan examples/game-design/evaluation-plan.json \
+            --dry-run > /tmp/grill-jev-dry-run.json
