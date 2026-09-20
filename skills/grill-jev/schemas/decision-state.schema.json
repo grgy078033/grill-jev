@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://grill-jev.dev/schemas/decision-state.schema.json",
+  "title": "grill-jev DecisionState",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "decision", "objective", "goals", "constraints", "settled_decisions", "facts", "options", "unknowns"],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "question"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "question": {"type": "string", "minLength": 1}
+      }
+    },
+    "objective": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary"],
+      "properties": {"primary": {"type": "string", "minLength": 1}}
+    },
+    "goals": {"type": "array", "items": {"$ref": "#/$defs/sourcedItem"}},
+    "constraints": {"type": "array", "items": {"$ref": "#/$defs/constraintItem"}},
+    "settled_decisions": {"type": "array", "items": {"$ref": "#/$defs/sourcedItem"}},
+    "facts": {"type": "array", "items": {"$ref": "#/$defs/sourcedItem"}},
+    "options": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "text"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "text": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "unknowns": {"type": "array", "items": {"type": "string", "minLength": 1}}
+  },
+  "$defs": {
+    "sourcedItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "text", "source"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "text": {"type": "string", "minLength": 1},
+        "source": {"type": "string", "minLength": 1}
+      }
+    },
+    "constraintItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "text", "severity", "source"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "text": {"type": "string", "minLength": 1},
+        "severity": {"enum": ["hard", "soft"]},
+        "source": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}
