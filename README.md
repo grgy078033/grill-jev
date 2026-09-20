@@ -2,93 +2,63 @@
 
 **Jev judges. The agent reasons. The user decides.**
 
-`grill-jev` is a portable Agent Skill that adds a structured **decision-evidence layer** to planning and grilling workflows. It is designed to work across skills-compatible coding agents such as Pi, Codex, Claude Code, and similar harnesses.
+`grill-jev` is a portable Agent Skill for evaluating candidate options during planning and grilling workflows.
 
-Instead of becoming another interview framework, `grill-jev` evaluates a decision that an upstream planner has already formed:
+It helps an agent turn a decision into structured evidence using Jev:
 
 ```text
-planning / grilling workflow
-        ↓
 question + candidate options
         ↓
      grill-jev
         ↓
-state firewall
-recommendation firewall
-evaluation plan
-        ↓
        Jev
- Choice + Score + Noul
         ↓
-DecisionEvidence
+Choice + Scores + constraint checks
         ↓
-parent agent explains trade-offs
+agent explains the trade-offs
         ↓
 user makes the final decision
 ```
 
-## Why this is different from `jev-me`
+## What it does
 
-`jev-me` is a Jev-enhanced grilling workflow: it owns the interview, design tree/frontier, question progression, and output artifact.
+`grill-jev`:
 
-`grill-jev` deliberately lives one layer lower. It does **not**:
+- evaluates multiple candidate options;
+- compares them across relevant dimensions;
+- checks hard constraints;
+- checks whether the candidate set may be missing an important alternative;
+- keeps Jev's judgment separate from the agent's recommendation;
+- works with planning workflows such as `grill-with-docs` or custom Agent Skills.
 
-- run the interview;
-- own a decision tree or frontier;
-- decide what question comes next;
-- write specs, ADRs, or tickets;
-- automatically accept Jev's highest-probability answer.
+It is designed to work across skills-compatible agents such as Pi, Codex, Claude Code, and similar harnesses.
 
-It only turns a well-formed decision into auditable decision evidence. That makes it usable from `grill-with-docs`, `grill-me`, custom planning skills, or an ordinary agent session.
+## Installation
 
-## Core ideas
-
-### 1. Canonical `DecisionState`
-
-The current decision is normalized into a small structured state containing goals, constraints, settled decisions, verified facts, candidate options, and known unknowns.
-
-### 2. State Firewall
-
-Do not send the full transcript or entire repository to Jev. Send the minimum sufficient state for the decision.
-
-### 3. Recommendation Firewall
-
-The parent agent's preference must not be included in the state sent to Jev. Jev should judge the decision state, not the parent's opinion about it.
-
-### 4. Multi-dimensional evidence
-
-`grill-jev` does not reduce everything to one fake 0–100 score. It returns:
-
-- an overall Choice distribution;
-- per-option Score judgments on explicit dimensions;
-- Noul checks for hard-constraint violations;
-- a Noul check for materially missing candidate options;
-- uncertainty and provenance.
-
-### 5. Human decision remains final
-
-Jev output is evidence, not an instruction. The parent agent may reason differently, and the user decides.
-
-## Quick start
-
-1. Install the TypeSafe SDK and set your API key:
+Install the TypeSafe SDK:
 
 ```bash
 python -m pip install typesafe-sdk
-export TYPESAFE_API_KEY='...'
 ```
 
-2. Prepare a `DecisionState` and `EvaluationPlan` (examples are included).
-
-3. Run:
+Set your TypeSafe API key:
 
 ```bash
-python skills/grill-jev/scripts/grill_jev.py \
-  --state examples/game-design/decision-state.json \
-  --plan examples/game-design/evaluation-plan.json
+export TYPESAFE_API_KEY='your-api-key'
 ```
 
-Use `--dry-run` to validate and inspect the Jev questions without making a network call:
+Then install or copy the `skills/grill-jev` directory into your agent's skills directory.
+
+## Usage
+
+Prepare:
+
+- a `DecisionState` describing the current goal, constraints, settled decisions, and candidate options;
+- an `EvaluationPlan` describing which dimensions should be evaluated.
+
+Example files are included in `examples/`.
+
+Run a dry-run first:
 
 ```bash
 python skills/grill-jev/scripts/grill_jev.py \
@@ -97,50 +67,26 @@ python skills/grill-jev/scripts/grill_jev.py \
   --dry-run
 ```
 
-## Integration with `grill-with-docs`
+Run a live Jev evaluation:
 
-Recommended flow:
+```bash
+python skills/grill-jev/scripts/grill_jev.py \
+  --state examples/game-design/decision-state.json \
+  --plan examples/game-design/evaluation-plan.json
+```
+
+## With grill-with-docs
+
+A typical workflow is:
 
 ```text
 grill-with-docs
-  → forms a frontier question and candidate options
-  → grill-jev evaluates those options
-  → agent explains evidence and gives its own recommendation
-  → user settles the decision
-  → grill-with-docs records vocabulary / ADRs as usual
-  → to-spec
-  → to-tickets
+  → creates a question and candidate options
+  → grill-jev evaluates the options
+  → agent explains the results
+  → user chooses
+  → grill-with-docs continues
 ```
-
-`grill-jev` never takes ownership of `CONTEXT.md` or ADRs.
-
-## Repository layout
-
-```text
-grill-jev/
-├── README.md
-├── LICENSE
-├── skills/grill-jev/
-│   ├── SKILL.md
-│   ├── references/
-│   ├── schemas/
-│   └── scripts/grill_jev.py
-├── examples/
-├── evals/
-└── tests/
-```
-
-## Related projects
-
-- TypeSafe / Jev SDK: https://github.com/typesafe-ai/typesafe-sdk-python
-- Matt Pocock skills (`grill-with-docs`, `grilling`, `to-spec`, `to-tickets`): https://github.com/mattpocock/skills
-- `jev-me` prior art: https://github.com/jon-devlapaz/jev-me
-
-`grill-jev` is an independent project and is not presented as an official extension of those projects.
-
-## Status
-
-Early v0.1 implementation. The protocol and schemas are intentionally explicit so they can be evaluated and evolved without coupling the project to one agent harness.
 
 ## License
 
