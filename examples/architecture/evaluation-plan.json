@@ -1,0 +1,27 @@
+{
+  "schema_version": "0.1",
+  "decision_id": "save-storage",
+  "dimensions": [
+    {
+      "id": "debuggability",
+      "label": "Debuggability",
+      "instruction": "How well does this option support direct developer inspection and debugging of save data?",
+      "basis": ["goal:debuggable"],
+      "rubric": ["Very difficult", "Difficult", "Mixed", "Easy", "Very easy"]
+    },
+    {
+      "id": "migration",
+      "label": "Migration support",
+      "instruction": "How well does this option support explicit versioned save migrations as the schema evolves?",
+      "basis": ["goal:migration"],
+      "rubric": ["Very poor", "Poor", "Mixed", "Good", "Very good"]
+    },
+    {
+      "id": "maintenance",
+      "label": "Maintenance burden",
+      "instruction": "How well does this option fit a small team's need for low implementation and maintenance burden?",
+      "basis": ["constraint:small-team"],
+      "rubric": ["Very poor fit", "Poor fit", "Mixed", "Good fit", "Excellent fit"]
+    }
+  ]
+}
