@@ -26,18 +26,126 @@
       "label": "User friction",
       "basis": ["goal:low-friction"],
       "options": {
-        "A": {"score": 3.7, "confidence": 0.76},
-        "B": {"score": 3.0, "confidence": 0.70},
-        "C": {"score": 4.5, "confidence": 0.84}
+        "A": {
+          "score": 3.7,
+          "confidence": 0.76,
+          "probabilities": {"0": 0.03, "1": 0.06, "2": 0.12, "3": 0.39, "4": 0.40},
+          "legend": {
+            "0": "Very high friction",
+            "1": "High friction",
+            "2": "Mixed",
+            "3": "Low friction",
+            "4": "Very low friction"
+          }
+        },
+        "B": {
+          "score": 3.0,
+          "confidence": 0.70,
+          "probabilities": {"0": 0.06, "1": 0.10, "2": 0.24, "3": 0.39, "4": 0.21},
+          "legend": {
+            "0": "Very high friction",
+            "1": "High friction",
+            "2": "Mixed",
+            "3": "Low friction",
+            "4": "Very low friction"
+          }
+        },
+        "C": {
+          "score": 4.5,
+          "confidence": 0.84,
+          "probabilities": {"0": 0.01, "1": 0.02, "2": 0.06, "3": 0.21, "4": 0.70},
+          "legend": {
+            "0": "Very high friction",
+            "1": "High friction",
+            "2": "Mixed",
+            "3": "Low friction",
+            "4": "Very low friction"
+          }
+        }
       }
     },
     "teaching": {
       "label": "Teaching effectiveness",
       "basis": ["goal:teach-core"],
       "options": {
-        "A": {"score": 4.5, "confidence": 0.85},
-        "B": {"score": 4.0, "confidence": 0.77},
-        "C": {"score": 2.8, "confidence": 0.72}
+        "A": {
+          "score": 4.5,
+          "confidence": 0.85,
+          "probabilities": {"0": 0.01, "1": 0.02, "2": 0.05, "3": 0.22, "4": 0.70},
+          "legend": {
+            "0": "Very weak",
+            "1": "Weak",
+            "2": "Mixed",
+            "3": "Good",
+            "4": "Excellent"
+          }
+        },
+        "B": {
+          "score": 4.0,
+          "confidence": 0.77,
+          "probabilities": {"0": 0.02, "1": 0.04, "2": 0.10, "3": 0.42, "4": 0.42},
+          "legend": {
+            "0": "Very weak",
+            "1": "Weak",
+            "2": "Mixed",
+            "3": "Good",
+            "4": "Excellent"
+          }
+        },
+        "C": {
+          "score": 2.8,
+          "confidence": 0.72,
+          "probabilities": {"0": 0.05, "1": 0.12, "2": 0.35, "3": 0.36, "4": 0.12},
+          "legend": {
+            "0": "Very weak",
+            "1": "Weak",
+            "2": "Mixed",
+            "3": "Good",
+            "4": "Excellent"
+          }
+        }
+      }
+    },
+    "maintenance": {
+      "label": "Maintenance fit",
+      "basis": ["constraint:small-team"],
+      "options": {
+        "A": {
+          "score": 3.1,
+          "confidence": 0.73,
+          "probabilities": {"0": 0.05, "1": 0.10, "2": 0.24, "3": 0.39, "4": 0.22},
+          "legend": {
+            "0": "Very poor fit",
+            "1": "Poor fit",
+            "2": "Mixed",
+            "3": "Good fit",
+            "4": "Excellent fit"
+          }
+        },
+        "B": {
+          "score": 2.7,
+          "confidence": 0.69,
+          "probabilities": {"0": 0.08, "1": 0.17, "2": 0.31, "3": 0.31, "4": 0.13},
+          "legend": {
+            "0": "Very poor fit",
+            "1": "Poor fit",
+            "2": "Mixed",
+            "3": "Good fit",
+            "4": "Excellent fit"
+          }
+        },
+        "C": {
+          "score": 4.4,
+          "confidence": 0.82,
+          "probabilities": {"0": 0.01, "1": 0.03, "2": 0.07, "3": 0.27, "4": 0.62},
+          "legend": {
+            "0": "Very poor fit",
+            "1": "Poor fit",
+            "2": "Mixed",
+            "3": "Good fit",
+            "4": "Excellent fit"
+          }
+        }
       }
     }
   },
