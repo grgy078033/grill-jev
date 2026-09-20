@@ -37,6 +37,8 @@ The upstream planner owns the interview. `grill-jev` receives one current decisi
 8. Ask the user to make the final decision.
 9. Return control to the upstream planning workflow.
 
+See `../../docs/schema.md` for the input/output field contract.
+
 ## State Firewall
 
 Only include information that is materially relevant to the current decision:
@@ -72,9 +74,33 @@ Use Jev primitives by meaning:
 - **Score**: degree along a concrete ordered rubric for one option and one evaluation dimension.
 - **Noul**: crisp yes/no conditions such as hard-constraint violation or candidate-set incompleteness.
 
+Hard-constraint checks are policy signals, not automatic filters. A likely violation must remain visible to the user.
+
+If the missing-alternative signal crosses the configured threshold, ask the generative parent agent to expand the candidate set and evaluate again. Jev does not invent the missing option.
+
 Do not invent a weighted aggregate score unless the user supplied the weights.
 
-Read `references/evaluation-plan.md` for question design.
+Read:
+
+- `references/evaluation-plan.md` for question design;
+- `../../docs/decision-policy.md` for thresholds and workflow behavior.
+
+## Fallback behavior
+
+If Jev is unavailable because the API key is missing, the request times out, or the backend fails, the default CLI behavior returns structured evidence with:
+
+```json
+{
+  "status": "degraded",
+  "fallback": {"action": "agent_reasoning"}
+}
+```
+
+Continue the planning workflow using normal agent reasoning, clearly say that Jev evidence is unavailable, and do not invent Jev probabilities.
+
+If `status` is `low_confidence`, show the available Jev evidence but treat it as weak.
+
+Use `--strict-backend` only when backend failure should stop the workflow.
 
 ## Presentation
 
@@ -99,7 +125,7 @@ python <skill-dir>/scripts/grill_jev.py \
   --dry-run
 ```
 
-Live evaluation requires `typesafe-sdk` and `TYPESAFE_API_KEY`:
+Live evaluation requires the pinned `typesafe-sdk` dependency and `TYPESAFE_API_KEY`:
 
 ```bash
 python <skill-dir>/scripts/grill_jev.py \
@@ -108,8 +134,13 @@ python <skill-dir>/scripts/grill_jev.py \
   --output /tmp/decision-evidence.json
 ```
 
+See `../../docs/compatibility.md` for the current SDK/model compatibility target.
+
 ## Integration notes
 
 For `grill-with-docs`, call this skill **after** the current frontier question has candidate options but **before** the user settles the decision. After the user decides, return control to `grill-with-docs` so it can update domain documentation normally.
 
-See `references/integrations.md`.
+See:
+
+- `references/integrations.md`;
+- `../../docs/grill-with-docs-contract.md`.
