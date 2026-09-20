@@ -38,9 +38,32 @@ python -m pip install -r requirements.txt
 export TYPESAFE_API_KEY='your-api-key'
 ```
 
-目前 Repository 鎖定 `typesafe-sdk==0.6.0`，並使用 TypeSafe 的 `jev-latest` 模型別名。
+目前 Repository 鎖定 `typesafe-sdk==0.7.0`，並使用 TypeSafe 的 `jev-latest` 模型別名。
 
-接著將 `skills/grill-jev` 安裝或複製到你的 Agent Skills 目錄中。
+安裝時請保留 Repository 結構，因為 `SKILL.md` 會引用 `../../docs/`。Pi 使用者可將 Repository 放在 `~/.agents/skills/grill-jev/`；Pi 會遞迴載入其中的 `skills/grill-jev/SKILL.md`。
+
+### Windows PowerShell
+
+若已將 key 儲存為 Windows 使用者環境變數，請先載入目前 shell，再啟動 Pi：
+
+```powershell
+$env:TYPESAFE_API_KEY = [Environment]::GetEnvironmentVariable('TYPESAFE_API_KEY', 'User')
+# 只確認是否存在，不顯示密鑰。
+-not [string]::IsNullOrWhiteSpace($env:TYPESAFE_API_KEY)
+pi
+```
+
+若尚未設定，可避免將密鑰寫入指令歷史：
+
+```powershell
+$secret = Read-Host 'TYPESAFE_API_KEY' -AsSecureString
+$value = [System.Net.NetworkCredential]::new('', $secret).Password
+[Environment]::SetEnvironmentVariable('TYPESAFE_API_KEY', $value, 'User')
+$env:TYPESAFE_API_KEY = $value
+Remove-Variable value, secret
+```
+
+Windows 使用者環境變數以明文保存；不要輸出或提交密鑰。已執行的 Pi 不會取得後續環境變數變更；`/reload` 只重載資源，不會刷新程序環境。請從上述 shell 重新啟動 Pi，或完整關閉並重開終端機／IDE，讓新 shell 繼承已儲存的 key。
 
 ## 使用方式
 

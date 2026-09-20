@@ -38,9 +38,32 @@ python -m pip install -r requirements.txt
 export TYPESAFE_API_KEY='your-api-key'
 ```
 
-The repository currently pins `typesafe-sdk==0.6.0` and targets TypeSafe's `jev-latest` model alias.
+The repository currently pins `typesafe-sdk==0.7.0` and targets TypeSafe's `jev-latest` model alias.
 
-Then install or copy `skills/grill-jev` into your agent's skills directory.
+Preserve the repository layout when installing: `SKILL.md` references `../../docs/`. For Pi, place the repository under `~/.agents/skills/grill-jev/`; Pi discovers the nested `skills/grill-jev/SKILL.md` recursively.
+
+### Windows PowerShell
+
+If you already saved the key as a Windows user environment variable, load it into the current shell before starting Pi:
+
+```powershell
+$env:TYPESAFE_API_KEY = [Environment]::GetEnvironmentVariable('TYPESAFE_API_KEY', 'User')
+# Check presence without printing the secret.
+-not [string]::IsNullOrWhiteSpace($env:TYPESAFE_API_KEY)
+pi
+```
+
+To save a new key without putting it in command history:
+
+```powershell
+$secret = Read-Host 'TYPESAFE_API_KEY' -AsSecureString
+$value = [System.Net.NetworkCredential]::new('', $secret).Password
+[Environment]::SetEnvironmentVariable('TYPESAFE_API_KEY', $value, 'User')
+$env:TYPESAFE_API_KEY = $value
+Remove-Variable value, secret
+```
+
+Windows user environment variables persist as plaintext; do not print or commit the key. An already running Pi process does not inherit later changes. `/reload` reloads resources, not the process environment: restart Pi from the shell above, or restart the entire terminal/IDE so a new shell inherits the saved key.
 
 ## Usage
 
