@@ -1,0 +1,60 @@
+{
+  "schema_version": "0.1",
+  "decision": {
+    "id": "restaurant-delivery-model",
+    "question": "How should restaurant delivery orders be fulfilled?"
+  },
+  "objective": {
+    "primary": "Create a cozy restaurant-management experience with meaningful progression and low busywork."
+  },
+  "goals": [
+    {
+      "id": "low-micromanagement",
+      "text": "Avoid excessive micromanagement and repetitive chores.",
+      "source": "user"
+    },
+    {
+      "id": "npc-integration",
+      "text": "NPCs and hired staff should have meaningful gameplay roles.",
+      "source": "CONTEXT.md"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "small-team",
+      "text": "The feature scope must remain realistic for a small development team.",
+      "severity": "soft",
+      "source": "user"
+    }
+  ],
+  "settled_decisions": [
+    {
+      "id": "staff-hiring",
+      "text": "The player can hire restaurant staff.",
+      "source": "CONTEXT.md"
+    },
+    {
+      "id": "npc-schedules",
+      "text": "NPCs follow daily schedules.",
+      "source": "CONTEXT.md"
+    }
+  ],
+  "facts": [],
+  "options": [
+    {
+      "id": "A",
+      "text": "The player personally delivers every order."
+    },
+    {
+      "id": "B",
+      "text": "Hired NPC staff perform deliveries."
+    },
+    {
+      "id": "C",
+      "text": "Delivery resolves automatically after accepting the order."
+    }
+  ],
+  "unknowns": [
+    "Exact pathfinding and scheduling implementation cost is not yet measured."
+  ]
+}
