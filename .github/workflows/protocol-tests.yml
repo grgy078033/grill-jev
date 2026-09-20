@@ -12,6 +12,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Install pinned SDK
+        run: python -m pip install -r requirements.txt
       - name: Run offline protocol tests
         run: python evals/run_local.py
       - name: Dry-run game-design example
@@ -20,3 +22,9 @@ jobs:
             --state examples/game-design/decision-state.json \
             --plan examples/game-design/evaluation-plan.json \
             --dry-run > /tmp/grill-jev-dry-run.json
+      - name: Dry-run product example
+        run: |
+          python skills/grill-jev/scripts/grill_jev.py \
+            --state examples/product/decision-state.json \
+            --plan examples/product/evaluation-plan.json \
+            --dry-run > /tmp/grill-jev-product-dry-run.json
