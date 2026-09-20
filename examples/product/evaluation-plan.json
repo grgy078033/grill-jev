@@ -1,0 +1,45 @@
+{
+  "schema_version": "0.1",
+  "decision_id": "onboarding-format",
+  "dimensions": [
+    {
+      "id": "user-friction",
+      "label": "User friction",
+      "instruction": "How well does this option keep onboarding lightweight and easy to skip for experienced users?",
+      "basis": ["goal:low-friction"],
+      "rubric": [
+        "Very high friction",
+        "High friction",
+        "Mixed",
+        "Low friction",
+        "Very low friction"
+      ]
+    },
+    {
+      "id": "teaching",
+      "label": "Teaching effectiveness",
+      "instruction": "How well does this option teach the core workflow before the user's first project?",
+      "basis": ["goal:teach-core"],
+      "rubric": [
+        "Very weak",
+        "Weak",
+        "Mixed",
+        "Good",
+        "Excellent"
+      ]
+    },
+    {
+      "id": "maintenance",
+      "label": "Maintenance fit",
+      "instruction": "How well does this option fit a small team's need for low maintenance burden?",
+      "basis": ["constraint:small-team"],
+      "rubric": [
+        "Very poor fit",
+        "Poor fit",
+        "Mixed",
+        "Good fit",
+        "Excellent fit"
+      ]
+    }
+  ]
+}
