@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://grill-jev.dev/schemas/decision-evidence.schema.json",
+  "title": "grill-jev DecisionEvidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "decision_id", "state_hash", "model", "overall_choice", "dimensions", "constraints", "candidate_coverage", "warnings"],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "decision_id": {"type": "string"},
+    "state_hash": {"type": "string"},
+    "model": {"type": ["string", "null"]},
+    "overall_choice": {
+      "type": "object",
+      "required": ["choice", "confidence", "probabilities"],
+      "properties": {
+        "choice": {"type": "string"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "probabilities": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}}
+      }
+    },
+    "dimensions": {"type": "object"},
+    "constraints": {"type": "object"},
+    "candidate_coverage": {
+      "type": "object",
+      "required": ["missing_material_option_probability"],
+      "properties": {"missing_material_option_probability": {"type": "number", "minimum": 0, "maximum": 1}}
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  }
+}
