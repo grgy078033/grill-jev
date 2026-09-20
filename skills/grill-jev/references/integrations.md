@@ -18,10 +18,6 @@ grilling frontier question
 
 `grill-jev` must not fork or duplicate the `grilling` primitive.
 
-## `jev-me`
-
-`jev-me` is an interview workflow. `grill-jev` is an evaluator. If integrated, `jev-me` should remain responsible for its design tree/frontier and may delegate a single formed decision to `grill-jev`.
-
 ## Custom planning workflows
 
 Any workflow can integrate if it can provide:
