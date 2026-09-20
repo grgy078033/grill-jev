@@ -6,8 +6,6 @@
 
 `grill-jev` 是一個可攜式的 Agent Skill，用於在規劃與 Grill 工作流程中評估候選方案。
 
-它會把一個決策轉換成結構化的 Jev 評估結果：
-
 ```text
 問題 + 候選方案
       ↓
@@ -15,7 +13,7 @@
       ↓
      Jev
       ↓
-Choice + Score + 約束檢查
+Choice + Scores + 約束檢查
       ↓
 Agent 解釋取捨
       ↓
@@ -24,62 +22,95 @@ Agent 解釋取捨
 
 ## 功能
 
-`grill-jev` 可以：
-
 - 評估多個候選方案；
 - 從多個相關維度比較不同方案；
 - 檢查硬性約束；
-- 檢查目前候選方案是否可能遺漏重要選項；
+- 檢查是否可能遺漏重要候選方案；
 - 將 Jev 的判斷與 Agent 自己的建議分開；
-- 與 `grill-with-docs` 或其他自訂 Agent Skills 搭配使用。
+- 可與 `grill-with-docs` 或其他規劃 Skill 搭配使用。
 
 它的設計目標是相容 Pi、Codex、Claude Code，以及其他支援 Agent Skills 的工具。
 
 ## 安裝
 
-安裝 TypeSafe SDK：
-
 ```bash
-python -m pip install typesafe-sdk
-```
-
-設定 TypeSafe API Key：
-
-```bash
+python -m pip install -r requirements.txt
 export TYPESAFE_API_KEY='your-api-key'
 ```
 
-接著將 `skills/grill-jev` 目錄安裝或複製到你的 Agent Skills 目錄中。
+目前 Repository 鎖定 `typesafe-sdk==0.6.0`，並使用 TypeSafe 的 `jev-latest` 模型別名。
+
+接著將 `skills/grill-jev` 安裝或複製到你的 Agent Skills 目錄中。
 
 ## 使用方式
 
-準備兩份資料：
+準備：
 
-- `DecisionState`：描述目前目標、限制、已確定的決策與候選方案；
-- `EvaluationPlan`：描述要從哪些維度評估這些候選方案。
+- `DecisionState`：目前目標、限制、已確定決策、事實與候選方案；
+- `EvaluationPlan`：用來比較候選方案的評估維度。
 
-Repository 中的 `examples/` 目錄提供了範例。
+`examples/` 中提供了範例。
 
-先進行 dry-run：
+Dry-run：
 
 ```bash
 python skills/grill-jev/scripts/grill_jev.py \
-  --state examples/game-design/decision-state.json \
-  --plan examples/game-design/evaluation-plan.json \
+  --state examples/product/decision-state.json \
+  --plan examples/product/evaluation-plan.json \
   --dry-run
 ```
 
-進行實際 Jev 評估：
+實際評估：
 
 ```bash
 python skills/grill-jev/scripts/grill_jev.py \
-  --state examples/game-design/decision-state.json \
-  --plan examples/game-design/evaluation-plan.json
+  --state examples/product/decision-state.json \
+  --plan examples/product/evaluation-plan.json
 ```
 
-## 與 grill-with-docs 搭配
+如果 Jev 無法使用，預設會回傳 `status: "degraded"` 與 `agent_reasoning` 降級指示，而不是中斷整個規劃流程。
 
-常見流程：
+## 輸出範例
+
+以下為模擬結果節選：
+
+```json
+{
+  "status": "ok",
+  "overall_choice": {
+    "choice": "A",
+    "confidence": 0.79,
+    "probabilities": {"A": 0.58, "B": 0.11, "C": 0.31}
+  },
+  "dimensions": {
+    "user-friction": {
+      "options": {
+        "A": {"score": 3.7, "confidence": 0.76},
+        "B": {"score": 3.0, "confidence": 0.70},
+        "C": {"score": 4.5, "confidence": 0.84}
+      }
+    }
+  },
+  "constraint_checks": {
+    "offline": {
+      "options": {
+        "B": {
+          "violation_probability": 0.94,
+          "status": "violation"
+        }
+      }
+    }
+  },
+  "missing_alternative": {
+    "probability": 0.18,
+    "status": "complete_enough"
+  }
+}
+```
+
+完整模擬輸出：`examples/product/example-output.json`。
+
+## 與 grill-with-docs 搭配
 
 ```text
 grill-with-docs
@@ -89,6 +120,13 @@ grill-with-docs
   → 使用者做出選擇
   → grill-with-docs 繼續後續流程
 ```
+
+## 文件
+
+- [Schema 說明](docs/schema.md)
+- [判定規則](docs/decision-policy.md)
+- [grill-with-docs 資料契約](docs/grill-with-docs-contract.md)
+- [相容性](docs/compatibility.md)
 
 ## License
 
