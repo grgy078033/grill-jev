@@ -1,3 +1,5 @@
+[English](README.md) | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md)
+
 # grill-jev
 
 **Jev 負責判斷，Agent 負責推理，使用者負責最終決定。**
