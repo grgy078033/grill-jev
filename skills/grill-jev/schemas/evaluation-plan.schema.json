@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://grill-jev.dev/schemas/evaluation-plan.schema.json",
+  "title": "grill-jev EvaluationPlan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "decision_id", "dimensions"],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "decision_id": {"type": "string", "minLength": 1},
+    "dimensions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "instruction", "basis", "rubric"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "label": {"type": "string", "minLength": 1},
+          "instruction": {"type": "string", "minLength": 1},
+          "basis": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "rubric": {"type": "array", "minItems": 2, "maxItems": 10, "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    }
+  }
+}
